@@ -1,0 +1,32 @@
+#JSGF V1.0;
+
+grammar alphabet;
+
+<alpha> = a |
+          b |
+          c |
+          d |
+          e |
+          f |
+          g |
+          i |
+          j |
+          k |
+          l |
+          ł |
+          m |
+          n |
+          o |
+          p |
+          r |
+          s |
+          ś |
+          t |
+          u |
+          w |
+          y |
+          z |
+          ż;
+          1;
+
+public <alphabet> = <alpha>+;
