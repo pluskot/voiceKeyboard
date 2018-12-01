@@ -1,0 +1,7 @@
+#JSGF V1.0;
+
+grammar special_characters;
+
+<character> = + | - | . | , | ! | ?;
+
+public <special_characters> = <characters>+;

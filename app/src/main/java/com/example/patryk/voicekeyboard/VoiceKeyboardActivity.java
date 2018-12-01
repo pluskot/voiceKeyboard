@@ -62,11 +62,13 @@ public class VoiceKeyboardActivity extends Activity implements
     private static final String ALPHABET_SEARCH = "alphabet";
     private static final String DIGITS_SEARCH = "digits";
     private static final String MENU_SEARCH = "menu";
+    private static final String SPECIAL_CHARACTERS_SEARCH = "special_characters";
 
     /* Keyword we are looking for to activate menu */
     private static final String START_KEYPHRASE = "start";
     private static final String ALPHABET_KEYPHRASE = "litery";
     private static final String DIGITS_KEYPHRASE = "cyfry";
+    private static final String SPECIAL_CHARACTERS_KEYPHRASE = "znaki";
 
     /* Used to handle permission request */
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
@@ -84,6 +86,7 @@ public class VoiceKeyboardActivity extends Activity implements
         captions.put(MENU_SEARCH, R.string.menu_caption);
         captions.put(ALPHABET_SEARCH, R.string.alphabet_caption);
         captions.put(DIGITS_SEARCH, R.string.digits_caption);
+        captions.put(SPECIAL_CHARACTERS_SEARCH, R.string.special_characters_caption);
         setContentView(R.layout.main);
         ((TextView) findViewById(R.id.caption_text))
                 .setText("Preparing the recognizer");
@@ -174,6 +177,8 @@ public class VoiceKeyboardActivity extends Activity implements
             switchSearch(ALPHABET_SEARCH);
         else if (text.equals(DIGITS_KEYPHRASE))
             switchSearch(DIGITS_SEARCH);
+        else if (text.equals(SPECIAL_CHARACTERS_KEYPHRASE))
+            switchSearch(SPECIAL_CHARACTERS_SEARCH);
         else
             ((TextView) findViewById(R.id.result_text)).setText(text);
     }
@@ -187,11 +192,17 @@ public class VoiceKeyboardActivity extends Activity implements
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
             makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-            if (recognizer.getSearchName().equals(ALPHABET_SEARCH) || recognizer.getSearchName().equals(DIGITS_SEARCH)) {
+            if (shouldDisplayResult()) {
                 String currentLog = logTextView.getText().toString() + "\n";
                 logTextView.setText(currentLog + text);
             }
         }
+    }
+
+    private boolean shouldDisplayResult() {
+        return !(recognizer.getSearchName().equals(ALPHABET_SEARCH)
+                || recognizer.getSearchName().equals(DIGITS_SEARCH)
+                || recognizer.getSearchName().equals(SPECIAL_CHARACTERS_SEARCH));
     }
 
     @Override
@@ -251,6 +262,9 @@ They are added here for demonstration. You can leave just one.
 
         File digitsGrammar = new File(assetsDir, "digits.gram");
         recognizer.addGrammarSearch(DIGITS_SEARCH, digitsGrammar);
+
+        File specialCharactersGrammar = new File(assetsDir, "special_characters.gram");
+        recognizer.addGrammarSearch(SPECIAL_CHARACTERS_SEARCH, specialCharactersGrammar);
     }
 
     @Override
