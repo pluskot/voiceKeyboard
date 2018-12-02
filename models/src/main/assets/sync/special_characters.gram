@@ -2,6 +2,6 @@
 
 grammar special_characters;
 
-<character> = + | - | . | , | ! | ?;
+<character> = "+"plus | -minus | .kropka | ,przecinek | ?znak-zapytania | !wykrzyknik;
 
-public <special_characters> = <characters>+;
+public <special_characters> = <character>+;
