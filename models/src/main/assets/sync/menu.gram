@@ -2,4 +2,4 @@
 
 grammar menu;
 
-public <item> = litery | cyfry;
+public <item> = litery | cyfry | znaki;

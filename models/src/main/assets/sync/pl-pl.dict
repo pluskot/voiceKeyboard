@@ -32,6 +32,7 @@ litery L IIH T EEH EX YY
 cyfry TS YY F EX YY
 start S T AH EX T
 stop S T OO P
+znaki TS N AH K IIH
 0 TS EE EX OO
 1 Y EEH D EEH N
 2 D W AAH
@@ -39,3 +40,13 @@ stop S T OO P
 4 CH T EE EX YY
 7 CH EE D EE M
 8 OO CC EE M
+plus P L UU S
+minus M IIH N UU S
+wykrzyknik W YY K SH YY K N IIH K
+znak_zapytania TS N AH K TS AH P YY T AH N IIH AH
+kropka K EX OO P K AH
+przecinek P SH EE CC IH N EE K
+spacja S P AH CC Y AH
+wielokropek W IIH EE L OO K EX OO P EE K
+średnik S EX D N IIH K
+dwukropek D W UU K EX OO P EE K

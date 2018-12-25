@@ -1,4 +1,5 @@
 alphabet.gram
+characters.gram
 cmudict-en-us.dict
 de-de-ptm/feat.params
 de-de-ptm/feature_transform

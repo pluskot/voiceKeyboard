@@ -1,0 +1,17 @@
+#JSGF V1.0;
+
+grammar characters;
+
+<character> =
+    plus |
+    minus |
+    wykrzyknik |
+    znak_zapytania |
+    kropka |
+    przecinek |
+    spacja |
+    wielokropek |
+    średnik |
+    dwukropek;
+
+public <characters> = <character>+;
