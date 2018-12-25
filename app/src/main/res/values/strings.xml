@@ -3,7 +3,7 @@
 
     <string name="app_name">VoiceKeyboard</string>
     <string name="kws_caption">To start demonstration say \"start\".</string>
-    <string name="menu_caption">To try alphabet say \"litery\". \n To try digits say \"cyfry\".</string>
+    <string name="menu_caption">To try alphabet say \"litery\". \n To try digits say \"cyfry\". \n To try special characters say \"znaki\".</string>
     <string name="alphabet_caption">To try alphabet say \"a\" etc..\nTo stop say \"stop\".</string>
     <string name="digits_caption">To try digits say \"1\" etc..\nTo stop say \"stop\".</string>
     <string name="special_characters_caption">To try special characters say \"+\" etc..\nTo stop say \"stop\".</string>

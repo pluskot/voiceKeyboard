@@ -27,6 +27,5 @@ grammar alphabet;
           y |
           z |
           ż;
-          1;
 
 public <alphabet> = <alpha>+;

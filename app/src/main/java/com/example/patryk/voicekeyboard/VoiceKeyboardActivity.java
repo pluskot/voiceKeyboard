@@ -62,7 +62,7 @@ public class VoiceKeyboardActivity extends Activity implements
     private static final String ALPHABET_SEARCH = "alphabet";
     private static final String DIGITS_SEARCH = "digits";
     private static final String MENU_SEARCH = "menu";
-    private static final String SPECIAL_CHARACTERS_SEARCH = "special_characters";
+    private static final String SPECIAL_CHARACTERS_SEARCH = "characters";
 
     /* Keyword we are looking for to activate menu */
     private static final String START_KEYPHRASE = "start";
@@ -170,6 +170,7 @@ public class VoiceKeyboardActivity extends Activity implements
         if (hypothesis == null)
             return;
 
+
         String text = hypothesis.getHypstr();
         if (text.equals(START_KEYPHRASE))
             switchSearch(MENU_SEARCH);
@@ -194,7 +195,14 @@ public class VoiceKeyboardActivity extends Activity implements
             makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             if (shouldDisplayResult()) {
                 String currentLog = logTextView.getText().toString() + "\n";
-                logTextView.setText(currentLog + text);
+                if(recognizer.getSearchName().equals(SPECIAL_CHARACTERS_SEARCH)){
+                    SpecialCharacter character = SpecialCharacter.fromString(text);
+                    if(character!=null){
+                        logTextView.setText(currentLog + character.getCharacter());
+                    }
+                }else {
+                    logTextView.setText(currentLog + text);
+                }
             }
         }
     }
@@ -263,7 +271,7 @@ They are added here for demonstration. You can leave just one.
         File digitsGrammar = new File(assetsDir, "digits.gram");
         recognizer.addGrammarSearch(DIGITS_SEARCH, digitsGrammar);
 
-        File specialCharactersGrammar = new File(assetsDir, "special_characters.gram");
+        File specialCharactersGrammar = new File(assetsDir, "characters.gram");
         recognizer.addGrammarSearch(SPECIAL_CHARACTERS_SEARCH, specialCharactersGrammar);
     }
 
