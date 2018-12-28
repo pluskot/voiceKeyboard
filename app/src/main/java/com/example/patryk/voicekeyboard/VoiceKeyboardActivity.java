@@ -141,8 +141,6 @@ public class VoiceKeyboardActivity extends Activity implements
 
         if (requestCode == PERMISSIONS_REQUEST_RECORD_AUDIO) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-// Recognizer initialization is a time-consuming and it involves IO,
-// so we execute it in async task
                 new SetupTask(this).execute();
             } else {
                 finish();

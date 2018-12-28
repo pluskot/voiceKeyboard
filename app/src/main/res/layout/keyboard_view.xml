@@ -4,11 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:id="@+id/captionPanel"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="26sp"
+            android:layout_gravity="center|center"
+            android:id="@+id/caption_text"/>
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:id="@+id/buttonPanel">
 
         <ImageButton
             android:id="@+id/addLetter"
