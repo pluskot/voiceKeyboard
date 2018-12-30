@@ -10,7 +10,10 @@ public enum SpecialCharacter {
     SPACE("spacja", " "),
     ELLIPSIS("wielokropek", "..."),
     SEMICOLON("średnik", ";"),
-    COLON("dwukropek", ":");
+    COLON("dwukropek", ":"),
+    AT("małpa", "@"),
+    PERCENT("procent", "%"),
+    DOLLAR("dolar", "$");
 
     private String character;
 

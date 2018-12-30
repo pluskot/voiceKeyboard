@@ -11,6 +11,9 @@ grammar characters;
     przecinek |
     wielokropek |
     średnik |
-    dwukropek;
+    dwukropek |
+    małpa |
+    dolar |
+    procent;
 
 public <characters> = <character>+;
