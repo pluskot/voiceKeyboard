@@ -17,8 +17,8 @@ public class VoiceRecognizer {
     private String result;
 
 
-    public enum RecognitionMode{
-        LETTER, DIGIT, CHARACTER, FULL, OTHER;
+    public enum RecognitionMode {
+        LETTER, DIGIT, CHARACTER, COMMANDS, FULL, OTHER;
     }
 
     /* Named searches allow to quickly reconfigure the decoder */
@@ -27,12 +27,14 @@ public class VoiceRecognizer {
     public static final String DIGITS_SEARCH = "digits";
     public static final String MENU_SEARCH = "menu";
     public static final String SPECIAL_CHARACTERS_SEARCH = "characters";
+    public static final String COMMANDS_SEARCH = "commands";
 
     /* Keyword we are looking for to activate menu */
     public static final String START_KEYPHRASE = "start";
     public static final String ALPHABET_KEYPHRASE = "litery";
     public static final String DIGITS_KEYPHRASE = "cyfry";
     public static final String SPECIAL_CHARACTERS_KEYPHRASE = "znaki";
+    public static final String COMMANDS_KEYPHRASE = "komendy";
 
     public void onBeginningOfSpeech() {
 
@@ -45,23 +47,23 @@ public class VoiceRecognizer {
     public void onPartialResult(Hypothesis hypothesis) {
         if (hypothesis == null)
             return;
-        if(mode == RecognitionMode.FULL){
+        if (mode == RecognitionMode.FULL) {
             String text = hypothesis.getHypstr();
             if (text.equals(START_KEYPHRASE)) {
                 switchSearch(MENU_SEARCH);
                 mode = RecognitionMode.OTHER;
-            }
-            else if (text.equals(ALPHABET_KEYPHRASE)) {
+            } else if (text.equals(ALPHABET_KEYPHRASE)) {
                 switchSearch(ALPHABET_SEARCH);
                 mode = RecognitionMode.LETTER;
-            }
-            else if (text.equals(DIGITS_KEYPHRASE)){
+            } else if (text.equals(DIGITS_KEYPHRASE)) {
                 switchSearch(DIGITS_SEARCH);
                 mode = RecognitionMode.DIGIT;
-            }
-            else if (text.equals(SPECIAL_CHARACTERS_KEYPHRASE)) {
+            } else if (text.equals(SPECIAL_CHARACTERS_KEYPHRASE)) {
                 mode = RecognitionMode.CHARACTER;
                 switchSearch(SPECIAL_CHARACTERS_SEARCH);
+            } else if (text.equals(COMMANDS_KEYPHRASE)) {
+                mode = RecognitionMode.COMMANDS;
+                switchSearch(COMMANDS_KEYPHRASE);
             }
         }
     }
@@ -71,27 +73,35 @@ public class VoiceRecognizer {
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
             if (shouldDisplayResult()) {
-                if(mode == RecognitionMode.CHARACTER){
+                if (mode == RecognitionMode.CHARACTER) {
                     SpecialCharacter character = SpecialCharacter.fromString(text);
-                    if(character!=null){
+                    if (character != null) {
                         result = character.getCharacter();
                     }
-                }else {
+                } else if (mode == RecognitionMode.COMMANDS) {
+                    Command command = Command.fromString(text);
+                    if (command != null) {
+                        result = command.getCommand();
+                    }
+                } else {
                     result = text;
                 }
             }
         }
+        recognizer.stop();
     }
 
     public void onError(Exception e) {
         result = "error";
+        recognizer.stop();
     }
 
     public void onTimeout() {
         result = "timeout";
+        recognizer.stop();
     }
 
-    public void destroy(){
+    public void destroy() {
         if (recognizer != null) {
             recognizer.cancel();
             recognizer.shutdown();
@@ -99,7 +109,8 @@ public class VoiceRecognizer {
     }
 
     public boolean shouldDisplayResult() {
-        return Arrays.asList(RecognitionMode.CHARACTER, RecognitionMode.LETTER, RecognitionMode.DIGIT).contains(mode);
+        return Arrays.asList(RecognitionMode.CHARACTER, RecognitionMode.LETTER, RecognitionMode.DIGIT,
+                RecognitionMode.COMMANDS).contains(mode);
     }
 
     public void switchSearch(String searchName) {
@@ -107,8 +118,6 @@ public class VoiceRecognizer {
 
         if (searchName.equals(KWS_SEARCH)) {
             recognizer.startListening(searchName);
-        } else if (searchName.equals(ALPHABET_SEARCH)) {
-            recognizer.startListening(searchName, 500);
         } else {
             recognizer.startListening(searchName, 10000);
         }
@@ -142,6 +151,9 @@ They are added here for demonstration. You can leave just one.
 
         File specialCharactersGrammar = new File(assetsDir, "characters.gram");
         recognizer.addGrammarSearch(SPECIAL_CHARACTERS_SEARCH, specialCharactersGrammar);
+
+        File commandsGrammar = new File(assetsDir, "commands.gram");
+        recognizer.addGrammarSearch(COMMANDS_SEARCH, commandsGrammar);
     }
 
     public SpeechRecognizer getRecognizer() {

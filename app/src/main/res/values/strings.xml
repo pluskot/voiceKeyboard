@@ -3,9 +3,11 @@
 
     <string name="app_name">VoiceKeyboard</string>
     <string name="kws_caption">To start demonstration say \"start\".</string>
-    <string name="menu_caption">To try alphabet say \"litery\". \n To try digits say \"cyfry\". \n To try special characters say \"znaki\".</string>
+    <string name="menu_caption">To try alphabet say \"litery\". \n To try digits say \"cyfry\". \n To try special characters say \"znaki\". To try commands say \"komendy\".</string>
     <string name="alphabet_caption">To try alphabet say \"a\" etc..\nTo stop say \"stop\".</string>
     <string name="digits_caption">To try digits say \"1\" etc..\nTo stop say \"stop\".</string>
     <string name="special_characters_caption">To try special characters say \"+\" etc..\nTo stop say \"stop\".</string>
+    <string name="command_caption">To delete one character say \"kasuj\" \n To delete all characters say \"reset\" \n
+    To insert gap between characters \"spacja\" \n To go to new line say \"nowa linia\" \n</string>
 
 </resources>

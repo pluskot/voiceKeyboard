@@ -3,6 +3,8 @@ package com.example.patryk.voicekeyboard;
 import android.app.Activity;
 import android.inputmethodservice.InputMethodService;
 import android.os.AsyncTask;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
 import android.widget.FrameLayout;
@@ -22,6 +24,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
     private ImageButton addLetterButton;
     private ImageButton addNumericButton;
     private ImageButton addSpecialCharacterButton;
+    private ImageButton addCommandButton;
     private ImageButton fullSetupButton;
     private TextView captionText;
     private FrameLayout buttonPanel;
@@ -37,6 +40,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
         addLetterButton = keyboardView.findViewById(R.id.addLetter);
         addNumericButton = keyboardView.findViewById(R.id.addNumeric);
         addSpecialCharacterButton = keyboardView.findViewById(R.id.addSpecialCharacter);
+        addCommandButton = keyboardView.findViewById(R.id.addCommand);
         fullSetupButton = keyboardView.findViewById(R.id.fullSetup);
         voiceRecognizer = new VoiceRecognizer();
         addLetterButton.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +59,12 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
             @Override
             public void onClick(View v) {
                 onAddSpecialCharacterButtonClick();
+            }
+        });
+        addCommandButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onAddCommandClick();
             }
         });
         fullSetupButton.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +105,13 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
         captionText.setText(R.string.special_characters_caption);
     }
 
+    private void onAddCommandClick() {
+        changePanelsVisibility(true);
+        voiceRecognizer.setMode(VoiceRecognizer.RecognitionMode.COMMANDS);
+        voiceRecognizer.switchSearch(VoiceRecognizer.COMMANDS_SEARCH);
+        captionText.setText(R.string.command_caption);
+    }
+
     private void onFullSetupButtonClick() {
         changePanelsVisibility(true);
         voiceRecognizer.setMode(VoiceRecognizer.RecognitionMode.FULL);
@@ -102,7 +119,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
         captionText.setText(R.string.menu_caption);
     }
 
-    private void changePanelsVisibility(boolean hideButtons){
+    private void changePanelsVisibility(boolean hideButtons) {
         if (hideButtons) {
             buttonPanel.setVisibility(View.GONE);
             captionPanel.setVisibility(View.VISIBLE);
@@ -131,19 +148,32 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
     public void onResult(Hypothesis hypothesis) {
         voiceRecognizer.onResult(hypothesis);
         InputConnection inputConnection = getCurrentInputConnection();
-        inputConnection.commitText(voiceRecognizer.getResult(), 0);
+        if (voiceRecognizer.getMode() == VoiceRecognizer.RecognitionMode.COMMANDS) {
+            if (Command.fromString(voiceRecognizer.getResult()) == Command.DELETE) {
+                inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+            } else if (Command.fromString(voiceRecognizer.getResult()) == Command.RESET) {
+                inputConnection.performContextMenuAction(android.R.id.selectAll);
+                inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+            } else {
+                inputConnection.commitText(voiceRecognizer.getResult(), 0);
+            }
+        } else {
+            inputConnection.commitText(voiceRecognizer.getResult(), 0);
+        }
         changePanelsVisibility(false);
     }
 
     @Override
     public void onError(Exception e) {
         voiceRecognizer.onError(e);
+        Log.i("VK", e.toString());
         changePanelsVisibility(false);
     }
 
     @Override
     public void onTimeout() {
         voiceRecognizer.onTimeout();
+        Log.i("VK", "timeout");
         changePanelsVisibility(false);
     }
 

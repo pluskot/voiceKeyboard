@@ -99,9 +99,12 @@ public class VoiceKeyboardActivity extends Activity implements
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_RECORD_AUDIO);
             return;
         }
-// Recognizer initialization is a time-consuming and it involves IO,
-// so we execute it in async task
-        new SetupTask(this).execute();
+
+        //TODO: uncomment for test and debug
+        //new SetupTask(this).execute();
+
+        //TODO: comment for test and debug
+        finish();
     }
 
     private static class SetupTask extends AsyncTask<Void, Void, Exception> {
