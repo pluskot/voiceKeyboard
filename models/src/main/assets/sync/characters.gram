@@ -9,7 +9,6 @@ grammar characters;
     znak_zapytania |
     kropka |
     przecinek |
-    spacja |
     wielokropek |
     średnik |
     dwukropek;

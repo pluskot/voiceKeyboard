@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:id="@+id/captionPanel"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="26sp"
+            android:layout_gravity="center|center"
+            android:id="@+id/caption_text"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:id="@+id/buttonPanel">
+
+        <ImageButton
+            android:id="@+id/addLetter"
+            android:layout_gravity="center|center"
+            android:layout_marginStart="-128dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/ic_button"
+            android:src="@drawable/ic_aa"
+            />
+        <ImageButton
+            android:id="@+id/addNumeric"
+            android:layout_gravity="center|center"
+            android:layout_marginStart="-64dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/ic_button"
+            android:src="@drawable/ic_0_9"
+            />
+        <ImageButton
+            android:id="@+id/addSpecialCharacter"
+            android:layout_gravity="center|center"
+            android:layout_marginStart="0dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/ic_button"
+            android:src="@drawable/ic_special"
+            />
+        <ImageButton
+            android:id="@+id/addCommand"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_gravity="center|center"
+            android:layout_marginStart="64dp"
+            android:background="@drawable/ic_button"
+            android:src="@drawable/ic_unfold_more_black_24dp"
+            />
+        <ImageButton
+            android:id="@+id/fullSetup"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_gravity="center|center"
+            android:layout_marginStart="128dp"
+            android:background="@drawable/ic_button"
+            android:src="@drawable/ic_mic_black_24dp"
+            />
+    </FrameLayout>
+
+</FrameLayout>

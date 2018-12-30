@@ -38,6 +38,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.inputmethod.InputConnection;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,7 +73,8 @@ public class VoiceKeyboardActivity extends Activity implements
 
     /* Used to handle permission request */
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
-    private TextView logTextView;
+    public static InputConnection inputConnection;
+    public static String result;
     private SpeechRecognizer recognizer;
     private HashMap<String, Integer> captions;
 
@@ -98,10 +100,11 @@ public class VoiceKeyboardActivity extends Activity implements
             return;
         }
 
-        logTextView = findViewById(R.id.log_text);
-// Recognizer initialization is a time-consuming and it involves IO,
-// so we execute it in async task
-        new SetupTask(this).execute();
+        //TODO: uncomment for test and debug
+        //new SetupTask(this).execute();
+
+        //TODO: comment for test and debug
+        finish();
     }
 
     private static class SetupTask extends AsyncTask<Void, Void, Exception> {
@@ -141,8 +144,6 @@ public class VoiceKeyboardActivity extends Activity implements
 
         if (requestCode == PERMISSIONS_REQUEST_RECORD_AUDIO) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-// Recognizer initialization is a time-consuming and it involves IO,
-// so we execute it in async task
                 new SetupTask(this).execute();
             } else {
                 finish();
@@ -180,8 +181,6 @@ public class VoiceKeyboardActivity extends Activity implements
             switchSearch(DIGITS_SEARCH);
         else if (text.equals(SPECIAL_CHARACTERS_KEYPHRASE))
             switchSearch(SPECIAL_CHARACTERS_SEARCH);
-        else
-            ((TextView) findViewById(R.id.result_text)).setText(text);
     }
 
     /**
@@ -189,19 +188,17 @@ public class VoiceKeyboardActivity extends Activity implements
      */
     @Override
     public void onResult(Hypothesis hypothesis) {
-        ((TextView) findViewById(R.id.result_text)).setText("");
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
             makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             if (shouldDisplayResult()) {
-                String currentLog = logTextView.getText().toString() + "\n";
                 if(recognizer.getSearchName().equals(SPECIAL_CHARACTERS_SEARCH)){
                     SpecialCharacter character = SpecialCharacter.fromString(text);
                     if(character!=null){
-                        logTextView.setText(currentLog + character.getCharacter());
+                        result = character.getCharacter();
                     }
                 }else {
-                    logTextView.setText(currentLog + text);
+                    result = text;
                 }
             }
         }
