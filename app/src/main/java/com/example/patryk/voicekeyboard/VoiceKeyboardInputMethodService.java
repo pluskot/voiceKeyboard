@@ -1,14 +1,23 @@
 package com.example.patryk.voicekeyboard;
 
+import android.app.Activity;
 import android.inputmethodservice.InputMethodService;
-import android.inputmethodservice.Keyboard;
+import android.os.AsyncTask;
 import android.view.View;
+import android.view.inputmethod.InputConnection;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class VoiceKeyboardInputMethodService extends InputMethodService {
+import java.io.File;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+
+import edu.cmu.pocketsphinx.Assets;
+import edu.cmu.pocketsphinx.Hypothesis;
+import edu.cmu.pocketsphinx.RecognitionListener;
+
+public class VoiceKeyboardInputMethodService extends InputMethodService implements RecognitionListener {
     private FrameLayout keyboardView;
     private ImageButton addLetterButton;
     private ImageButton addNumericButton;
@@ -17,6 +26,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService {
     private TextView captionText;
     private FrameLayout buttonPanel;
     private FrameLayout captionPanel;
+    private VoiceRecognizer voiceRecognizer;
 
     @Override
     public View onCreateInputView() {
@@ -28,6 +38,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService {
         addNumericButton = keyboardView.findViewById(R.id.addNumeric);
         addSpecialCharacterButton = keyboardView.findViewById(R.id.addSpecialCharacter);
         fullSetupButton = keyboardView.findViewById(R.id.fullSetup);
+        voiceRecognizer = new VoiceRecognizer();
         addLetterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,22 +63,114 @@ public class VoiceKeyboardInputMethodService extends InputMethodService {
                 onFullSetupButtonClick();
             }
         });
+        changePanelsVisibility(false);
+        new SetupTask(this).execute();
         return keyboardView;
     }
 
-    private void onAddLetterButtonClick() {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        voiceRecognizer.destroy();
+    }
 
+    private void onAddLetterButtonClick() {
+        changePanelsVisibility(true);
+        voiceRecognizer.setMode(VoiceRecognizer.RecognitionMode.LETTER);
+        voiceRecognizer.switchSearch(VoiceRecognizer.ALPHABET_SEARCH);
+        captionText.setText(R.string.alphabet_caption);
     }
 
     private void onAddNumericButtonClick() {
-
+        changePanelsVisibility(true);
+        voiceRecognizer.setMode(VoiceRecognizer.RecognitionMode.DIGIT);
+        voiceRecognizer.switchSearch(VoiceRecognizer.DIGITS_SEARCH);
+        captionText.setText(R.string.digits_caption);
     }
 
     private void onAddSpecialCharacterButtonClick() {
-
+        changePanelsVisibility(true);
+        voiceRecognizer.setMode(VoiceRecognizer.RecognitionMode.CHARACTER);
+        voiceRecognizer.switchSearch(VoiceRecognizer.SPECIAL_CHARACTERS_SEARCH);
+        captionText.setText(R.string.special_characters_caption);
     }
 
     private void onFullSetupButtonClick() {
+        changePanelsVisibility(true);
+        voiceRecognizer.setMode(VoiceRecognizer.RecognitionMode.FULL);
+        voiceRecognizer.switchSearch(VoiceRecognizer.KWS_SEARCH);
+        captionText.setText(R.string.menu_caption);
+    }
 
+    private void changePanelsVisibility(boolean hideButtons){
+        if (hideButtons) {
+            buttonPanel.setVisibility(View.GONE);
+            captionPanel.setVisibility(View.VISIBLE);
+        } else {
+            buttonPanel.setVisibility(View.VISIBLE);
+            captionPanel.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onBeginningOfSpeech() {
+        voiceRecognizer.onBeginningOfSpeech();
+    }
+
+    @Override
+    public void onEndOfSpeech() {
+        voiceRecognizer.onEndOfSpeech();
+    }
+
+    @Override
+    public void onPartialResult(Hypothesis hypothesis) {
+        voiceRecognizer.onPartialResult(hypothesis);
+    }
+
+    @Override
+    public void onResult(Hypothesis hypothesis) {
+        voiceRecognizer.onResult(hypothesis);
+        InputConnection inputConnection = getCurrentInputConnection();
+        inputConnection.commitText(voiceRecognizer.getResult(), 0);
+        changePanelsVisibility(false);
+    }
+
+    @Override
+    public void onError(Exception e) {
+        voiceRecognizer.onError(e);
+        changePanelsVisibility(false);
+    }
+
+    @Override
+    public void onTimeout() {
+        voiceRecognizer.onTimeout();
+        changePanelsVisibility(false);
+    }
+
+    private static class SetupTask extends AsyncTask<Void, Void, Exception> {
+        WeakReference<VoiceKeyboardInputMethodService> activityReference;
+
+        SetupTask(VoiceKeyboardInputMethodService activity) {
+            this.activityReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected Exception doInBackground(Void... params) {
+            try {
+                Assets assets = new Assets(activityReference.get());
+                File assetDir = assets.syncAssets();
+                activityReference.get().voiceRecognizer.initVoiceRecognizer(assetDir, activityReference.get());
+            } catch (IOException e) {
+                return e;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Exception result) {
+            if (result != null) {
+                activityReference.get().captionText.setText("Failed to init recognizer " + result);
+            }
+        }
     }
 }
