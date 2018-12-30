@@ -12,9 +12,9 @@ import edu.cmu.pocketsphinx.SpeechRecognizer;
 import edu.cmu.pocketsphinx.SpeechRecognizerSetup;
 
 public class VoiceRecognizer {
-    private static SpeechRecognizer recognizer;
-    private static RecognitionMode mode;
-    private static String result;
+    private SpeechRecognizer recognizer;
+    private RecognitionMode mode;
+    private String result;
 
 
     public enum RecognitionMode{
@@ -144,27 +144,27 @@ They are added here for demonstration. You can leave just one.
         recognizer.addGrammarSearch(SPECIAL_CHARACTERS_SEARCH, specialCharactersGrammar);
     }
 
-    public static SpeechRecognizer getRecognizer() {
+    public SpeechRecognizer getRecognizer() {
         return recognizer;
     }
 
-    public static void setRecognizer(SpeechRecognizer recognizer) {
-        VoiceRecognizer.recognizer = recognizer;
+    public void setRecognizer(SpeechRecognizer recognizer) {
+        this.recognizer = recognizer;
     }
 
-    public static RecognitionMode getMode() {
+    public RecognitionMode getMode() {
         return mode;
     }
 
-    public static void setMode(RecognitionMode mode) {
-        VoiceRecognizer.mode = mode;
+    public void setMode(RecognitionMode mode) {
+        this.mode = mode;
     }
 
-    public static String getResult() {
+    public String getResult() {
         return result;
     }
 
-    public static void setResult(String result) {
-        VoiceRecognizer.result = result;
+    public void setResult(String result) {
+        this.result = result;
     }
 }
