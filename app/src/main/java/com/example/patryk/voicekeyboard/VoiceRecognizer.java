@@ -15,10 +15,12 @@ public class VoiceRecognizer {
     private SpeechRecognizer recognizer;
     private RecognitionMode mode;
     private String result;
+    private boolean shift;
+    private boolean alt;
 
 
     public enum RecognitionMode {
-        LETTER, DIGIT, CHARACTER, COMMANDS, FULL, OTHER;
+        LETTER, DIGIT, CHARACTER, COMMANDS, MODIFIERS, FULL, OTHER;
     }
 
     /* Named searches allow to quickly reconfigure the decoder */
@@ -73,15 +75,35 @@ public class VoiceRecognizer {
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
             if (shouldDisplayResult()) {
-                if (mode == RecognitionMode.CHARACTER) {
+                if (mode == RecognitionMode.LETTER){
+                    if (isShift() && isAlt()) {
+                        performAlt(text);
+                        result = result.toUpperCase();
+                    } else if (isShift()) {
+                        result = text.toUpperCase();
+                        setShift(false);
+                    } else if (isAlt()) {
+                        performAlt(text);
+                        setAlt(false);
+                    } else {
+                        result = text;
+                    }
+                }
+                else if (mode == RecognitionMode.CHARACTER) {
                     SpecialCharacter character = SpecialCharacter.fromString(text);
                     if (character != null) {
                         result = character.getCharacter();
                     }
                 } else if (mode == RecognitionMode.COMMANDS) {
-                    Command command = Command.fromString(text);
-                    if (command != null) {
-                        result = command.getCommand();
+                    if (text.contains("shift")) {
+                        setShift(true);
+                    } else if (text.contains("alt")) {
+                        setAlt(true);
+                    } else {
+                        Command command = Command.fromString(text);
+                        if (command != null) {
+                            result = command.getCommand();
+                        }
                     }
                 } else {
                     result = text;
@@ -89,6 +111,18 @@ public class VoiceRecognizer {
             }
         }
         recognizer.stop();
+    }
+
+    private void performAlt(String text) {
+        result = text.replaceAll("o", "ó");
+        result = result.replaceAll("a", "ą");
+        result = result.replaceAll("e", "ę");
+        result = result.replaceAll("s", "ś");
+        result = result.replaceAll("l", "ł");
+        result = result.replaceAll("z", "ż");
+        result = result.replaceAll("x", "ź");
+        result = result.replaceAll("c", "ć");
+        result = result.replaceAll("n", "ń");
     }
 
     public void onError(Exception e) {
@@ -110,7 +144,7 @@ public class VoiceRecognizer {
 
     public boolean shouldDisplayResult() {
         return Arrays.asList(RecognitionMode.CHARACTER, RecognitionMode.LETTER, RecognitionMode.DIGIT,
-                RecognitionMode.COMMANDS).contains(mode);
+                RecognitionMode.COMMANDS, RecognitionMode.MODIFIERS).contains(mode);
     }
 
     public void switchSearch(String searchName) {
@@ -179,4 +213,21 @@ They are added here for demonstration. You can leave just one.
     public void setResult(String result) {
         this.result = result;
     }
+
+    public boolean isShift() {
+        return shift;
+    }
+
+    public void setShift(boolean shift) {
+        this.shift = shift;
+    }
+
+    public boolean isAlt() {
+        return alt;
+    }
+
+    public void setAlt(boolean alt) {
+        this.alt = alt;
+    }
+
 }

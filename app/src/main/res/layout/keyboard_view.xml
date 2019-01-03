@@ -58,7 +58,7 @@
             android:layout_gravity="center|center"
             android:layout_marginStart="64dp"
             android:background="@drawable/ic_button"
-            android:src="@drawable/ic_unfold_more_black_24dp"
+            android:src="@drawable/ic_text_fields_black_24dp"
             />
         <ImageButton
             android:id="@+id/fullSetup"

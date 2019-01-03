@@ -6,6 +6,8 @@ grammar commands;
     spacja |
     nowa_linia |
     kasuj |
-    reset;
+    reset |
+    shift |
+    alt;
 
 public <commands> = <command>+;
