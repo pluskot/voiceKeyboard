@@ -26,9 +26,12 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
     private ImageButton addSpecialCharacterButton;
     private ImageButton addCommandButton;
     private ImageButton fullSetupButton;
+    private ImageButton shiftIcon;
+    private ImageButton altIcon;
     private TextView captionText;
     private FrameLayout buttonPanel;
     private FrameLayout captionPanel;
+    private FrameLayout modifiersPanel;
     private VoiceRecognizer voiceRecognizer;
 
     @Override
@@ -36,12 +39,15 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
         keyboardView = (FrameLayout) getLayoutInflater().inflate(R.layout.keyboard_view, null);
         captionPanel = keyboardView.findViewById(R.id.captionPanel);
         buttonPanel = keyboardView.findViewById(R.id.buttonPanel);
+        modifiersPanel = keyboardView.findViewById(R.id.modifiersPanel);
         captionText = keyboardView.findViewById(R.id.caption_text);
         addLetterButton = keyboardView.findViewById(R.id.addLetter);
         addNumericButton = keyboardView.findViewById(R.id.addNumeric);
         addSpecialCharacterButton = keyboardView.findViewById(R.id.addSpecialCharacter);
         addCommandButton = keyboardView.findViewById(R.id.addCommand);
         fullSetupButton = keyboardView.findViewById(R.id.fullSetup);
+        shiftIcon = keyboardView.findViewById(R.id.shiftIcon);
+        altIcon = keyboardView.findViewById(R.id.altIcon);
         voiceRecognizer = new VoiceRecognizer();
         addLetterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +80,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
             }
         });
         changePanelsVisibility(false);
+        changeModifiersVisibility(false);
         new SetupTask(this).execute();
         return keyboardView;
     }
@@ -86,6 +93,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
 
     private void onAddLetterButtonClick() {
         changePanelsVisibility(true);
+        changeModifiersVisibility(true);
         voiceRecognizer.setMode(VoiceRecognizer.RecognitionMode.LETTER);
         voiceRecognizer.switchSearch(VoiceRecognizer.ALPHABET_SEARCH);
         captionText.setText(R.string.alphabet_caption);
@@ -93,6 +101,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
 
     private void onAddNumericButtonClick() {
         changePanelsVisibility(true);
+        changeModifiersVisibility(false);
         voiceRecognizer.setMode(VoiceRecognizer.RecognitionMode.DIGIT);
         voiceRecognizer.switchSearch(VoiceRecognizer.DIGITS_SEARCH);
         captionText.setText(R.string.digits_caption);
@@ -100,6 +109,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
 
     private void onAddSpecialCharacterButtonClick() {
         changePanelsVisibility(true);
+        changeModifiersVisibility(false);
         voiceRecognizer.setMode(VoiceRecognizer.RecognitionMode.CHARACTER);
         voiceRecognizer.switchSearch(VoiceRecognizer.SPECIAL_CHARACTERS_SEARCH);
         captionText.setText(R.string.special_characters_caption);
@@ -107,6 +117,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
 
     private void onAddCommandClick() {
         changePanelsVisibility(true);
+        changeModifiersVisibility(false);
         voiceRecognizer.setMode(VoiceRecognizer.RecognitionMode.COMMANDS);
         voiceRecognizer.switchSearch(VoiceRecognizer.COMMANDS_SEARCH);
         captionText.setText(R.string.command_caption);
@@ -114,6 +125,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
 
     private void onFullSetupButtonClick() {
         changePanelsVisibility(true);
+        changeModifiersVisibility(false);
         voiceRecognizer.setMode(VoiceRecognizer.RecognitionMode.FULL);
         voiceRecognizer.switchSearch(VoiceRecognizer.KWS_SEARCH);
         captionText.setText(R.string.menu_caption);
@@ -126,6 +138,26 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
         } else {
             buttonPanel.setVisibility(View.VISIBLE);
             captionPanel.setVisibility(View.GONE);
+        }
+    }
+
+    private void changeModifiersVisibility(boolean showModifiers) {
+        if (showModifiers) {
+            modifiersPanel.setVisibility(View.VISIBLE);
+            if (voiceRecognizer.isShift()) {
+                shiftIcon.setVisibility(View.VISIBLE);
+            } else {
+                shiftIcon.setVisibility(View.GONE);
+            }
+            if (voiceRecognizer.isAlt()) {
+                altIcon.setVisibility(View.VISIBLE);
+            } else {
+                altIcon.setVisibility(View.GONE);
+            }
+        } else {
+            modifiersPanel.setVisibility(View.GONE);
+            altIcon.setVisibility(View.GONE);
+            shiftIcon.setVisibility(View.GONE);
         }
     }
 
@@ -161,6 +193,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
             inputConnection.commitText(voiceRecognizer.getResult(), 0);
         }
         changePanelsVisibility(false);
+        changeModifiersVisibility(false);
     }
 
     @Override
@@ -168,6 +201,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
         voiceRecognizer.onError(e);
         Log.i("VK", e.toString());
         changePanelsVisibility(false);
+        changeModifiersVisibility(false);
     }
 
     @Override
@@ -175,6 +209,7 @@ public class VoiceKeyboardInputMethodService extends InputMethodService implemen
         voiceRecognizer.onTimeout();
         Log.i("VK", "timeout");
         changePanelsVisibility(false);
+        changeModifiersVisibility(false);
     }
 
     private static class SetupTask extends AsyncTask<Void, Void, Exception> {

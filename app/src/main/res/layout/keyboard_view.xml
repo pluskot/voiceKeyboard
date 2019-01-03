@@ -4,12 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="fill_parent">
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="center"
         android:id="@+id/captionPanel"
-        android:visibility="gone">
+        android:visibility="visible">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:id="@+id/modifiersPanel"
+            android:visibility="visible">
+            <ImageButton
+                android:id="@+id/shiftIcon"
+                android:layout_gravity="top|end"
+                android:layout_marginEnd="10dp"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_shift"
+                android:visibility="visible"
+                />
+            <ImageButton
+                android:id="@+id/altIcon"
+                android:layout_gravity="top|end"
+                android:layout_marginEnd="45dp"
+                android:layout_width="35dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_alt"
+                android:visibility="visible"
+                />
+        </FrameLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,7 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="center"
-        android:id="@+id/buttonPanel">
+        android:id="@+id/buttonPanel"
+        android:visibility="gone">
 
         <ImageButton
             android:id="@+id/addLetter"

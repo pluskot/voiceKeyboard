@@ -79,6 +79,8 @@ public class VoiceRecognizer {
                     if (isShift() && isAlt()) {
                         performAlt(text);
                         result = result.toUpperCase();
+                        setAlt(false);
+                        setShift(false);
                     } else if (isShift()) {
                         result = text.toUpperCase();
                         setShift(false);
