@@ -10,7 +10,6 @@ i Q IIH
 j Y OO T
 k K AH
 l Q EH L
-ł EE AW
 m Q EH M
 n Q EH N
 o Q OOH
@@ -18,7 +17,6 @@ p P EE
 q K UU
 r Q EE RR
 s Q EE S
-ś Q EE CC
 t T EE
 u Q UUH
 v F AW
@@ -26,8 +24,6 @@ w W UU
 x Q IIH K S
 y IIH G EX EH K
 z TS EE T
-ź CC EE T
-ż ZH EE T
 litery L IIH T EEH EX YY
 cyfry TS YY F EX YY
 start S T AH EX T
@@ -39,8 +35,11 @@ komendy K OO M EE N D YY
 2 D W AAH
 3 T SH YY
 4 CH T EE EX YY
+5 P
+6 S
 7 CH EE D EE M
 8 OO CC EE M
+9 D
 plus P L UU S
 minus M IIH N UU S
 wykrzyknik W YY K SH YY K N IIH K
@@ -57,3 +56,5 @@ spacja S P AH CC Y AH
 nowa_linia N OO W AH L IH N Y AH
 kasuj K AH S UU Y
 reset RR EE S EE T
+shift SH IH F T
+alt AH L T

@@ -8,6 +8,7 @@
     <string name="digits_caption">To try digits say \"1\" etc..\nTo stop say \"stop\".</string>
     <string name="special_characters_caption">To try special characters say \"+\" etc..\nTo stop say \"stop\".</string>
     <string name="command_caption">To delete one character say \"kasuj\" \n To delete all characters say \"reset\" \n
-    To insert gap between characters \"spacja\" \n To go to new line say \"nowa linia\" \n</string>
+    To insert gap between characters \"spacja\" \n To go to new line say \"nowa linia\" \n
+    To enable Shift say \"shift\" etc..\nTo enable Alt say \"alt\".</string>
 
 </resources>
